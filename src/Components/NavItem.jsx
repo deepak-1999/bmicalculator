@@ -7,7 +7,7 @@ const NavItem = (props) => {
     <div>
       <div
         onClick={onClick}
-        className={`block px-3 py-2 rounded-md ${
+        className={`block px-3 py-2 rounded-md cursor-default ${
           isActive ? 'bg-stone-500 text-white' : 'bg-stone-400'
         }`}
       >
