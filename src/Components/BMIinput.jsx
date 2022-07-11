@@ -1,89 +1,119 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { TbRefresh } from 'react-icons/tb'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useEffect } from 'react'
+import { useFormik } from 'formik'
 
 const BMIinput = (props) => {
   const { pageNum, setBmi } = props
-  const [heightFt, setHeightFt] = useState(0)
-  const [heightIn, setHeightIn] = useState(0)
-  const [weightSt, setWeightSt] = useState(0)
-  const [weightLbs, setWeightLbs] = useState(0)
-  const [isMeters, setIsMeters] = useState('m')
-  const [heightMetric, setHeightMetric] = useState(0)
-  const [weightMetric, setWeightMetric] = useState(0)
+  // const [heightFt, setHeightFt] = useState(0)
+  // const [heightIn, setHeightIn] = useState(0)
+  // const [weightSt, setWeightSt] = useState(0)
+  // const [weightLbs, setWeightLbs] = useState(0)
+  // const [isMeters, setIsMeters] = useState('m')
+  // const [heightMetric, setHeightMetric] = useState(0)
+  // const [weightMetric, setWeightMetric] = useState(0)
 
   useEffect(() =>{
-    console.log('Changed')
-    resetValues()
-  }, pageNum)
-
-
-  const resetValues = () => {
-    setHeightFt(0)
-    setHeightIn(0)
-    setWeightSt(0)
-    setWeightLbs(0)
-    setIsMeters('m')
-    setHeightMetric(0)
-    setWeightMetric(0)
+    formik.handleReset()
     setBmi(0)
-  }
+  }, [pageNum])
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    if(pageNum === 1){
-      console.log(event)
-      let heightSquared = heightMetric*heightMetric * (isMeters ? 1 : (0.01*0.01))
-      setBmi(weightMetric/heightSquared)
-    }
+  const formik = useFormik({
+    initialValues: {
+      heightFt: 0,
+      heightIn: 0,
+      weightSt: 0,
+      weightLbs: 0,
+      isMeters: 'm',
+      heightMetric: 0,
+      weightMetric: 0
+    },
+    onSubmit: values => {
+      const {heightFt, heightIn, weightLbs, weightMetric, weightSt, isMeters, heightMetric} = values
+      if(pageNum === 0){
+        let weightToMetric = (weightSt * 14 + weightLbs) * 0.453592
+        let heightToMetric = (heightFt * 12 + heightIn) * 0.0254
+        let heightSquared = heightToMetric * heightToMetric
+        setBmi(weightToMetric/heightSquared)
+      }
+      if(pageNum === 1){
+        let heightSquared = heightMetric* heightMetric * (isMeters === 'm' ? 1 : (0.01 * 0.01))
+        setBmi(weightMetric/heightSquared)
+      }
+    },
+    onReset: () => { setBmi(0) }
+  })
 
-    return false
-  }
+
+  // const resetValues = () => {
+  //   setHeightFt(0)
+  //   setHeightIn(0)
+  //   setWeightSt(0)
+  //   setWeightLbs(0)
+  //   setIsMeters('m')
+  //   setHeightMetric(0)
+  //   setWeightMetric(0)
+  //   setBmi(0)
+  // }
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault()
+  //   if(pageNum === 1){
+  //     console.log(event)
+  //     let heightSquared = heightMetric*heightMetric * (isMeters ? 1 : (0.01*0.01))
+  //     setBmi(weightMetric/heightSquared)
+  //   }
+
+  //   return false
+  // }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
       <div className='mt-2 flex flex-row'>
         <label>Height</label>
         {pageNum === 0 ? (
-
           <div className='w-52'>
             <input
+              id='heightFt'
+              name='heightFt'
               type='number'
-              min={1}
-              max={10}
-              maxLength={1}
-              value={heightFt}
-              onChange={(e) => setHeightFt(parseInt(e.target.value))}
-              className='ml-8 px-2 border bg-white rounded-md border-black'
+              min = {formik.values.heightIn ? 0 : 1}
+              max={9}
+              onChange={formik.handleChange}
+              value={formik.values.heightFt}
+              className='ml-8 px-2 w-11 border bg-white rounded-md border-black'
             ></input>
-            <label className='ml-2'>ft</label>
+            <label className='ml-2 mr-0.5'>ft</label>
             <input
               type='number'
-              min={1}
+              id='heightIn'
+              name='heightIn'
               max={12}
               maxLength={2}
-              value={heightIn}
-              onChange={(e) => setHeightIn(parseInt(e.target.value))}
-              className='ml-4 px-2 border bg-white rounded-md border-black'
+              value={formik.values.heightIn}
+              onChange={formik.handleChange}
+              className='ml-4 px-2 w-11 border bg-white rounded-md border-black'
             ></input>
             <label className='ml-2'>in</label>
           </div>
         ) : (
           <div className='w-52'>
             <input
-              value={heightMetric}
-              max={3}
-              onChange={(e) => {
-                setHeightMetric(e.target.value)
-              }}
+              value={formik.values.heightMetric}
+              max={formik.values.isMeters === 'm' ? 3 : 300}
               type='number'
+              id='heightMetric'
+              name='heightMetric'
+              onChange={formik.handleChange}
               className='w-16 ml-8 px-2 border bg-white rounded-md border-black'
             ></input>
             <select
-              value={isMeters}
-              onChange={(e) => setIsMeters(e.target.value)}
+              id='isMeters'
+              name='isMeters'
+              onChange={formik.handleChange}
+              value={formik.values.isMeters}
               className='ml-4 px-1 rounded-md border-black border py-0.75'
             >
               <option value={'m'}>m</option>
@@ -98,17 +128,21 @@ const BMIinput = (props) => {
           <div className='w-52'>
             <input
               type='number'
-              value={weightSt}
-              min={1}
-              onChange={(e) => setWeightSt(parseInt(e.target.value))}
+              id='weightSt'
+              name='weightSt'
+              min={formik.values.weightLbs ? 0 : 1}
+              value={formik.values.weightSt}
+              onChange={formik.handleChange}
               className='ml-8 px-2 w-11 border bg-white rounded-md border-black'
             ></input>
             <label className='ml-2 mr-0.5'>st</label>
             <input
               type='number'
-              min={1}
-              value={weightLbs}
-              onChange={(e) => setWeightLbs(parseInt(e.target.value))}
+              max={14}
+              id='weightLbs'
+              name='weightLbs'
+              onChange={formik.handleChange}
+              value={formik.values.weightLbs}
               className='ml-4 px-2 w-11 border bg-white rounded-md border-black'
             ></input>
             <label className='ml-2'>lbs</label>
@@ -116,10 +150,10 @@ const BMIinput = (props) => {
         ) : (
           <div className='w-52'>
             <input
-              onChange={(e) => {
-                setWeightMetric(e.target.value)
-              }}
-              value={weightMetric}
+              id='weightMetric'
+              name='weightMetric'
+              onChange={formik.handleChange}
+              value={formik.values.weightMetric}
               type='number'
               className='w-16 ml-8 px-2 border bg-white rounded-md border-black'
             ></input>
@@ -129,7 +163,7 @@ const BMIinput = (props) => {
       </div>
       <hr className='bg-black/10 my-2'></hr>
       <div className='flex flex-row-reverse'>
-        <button onClick={resetValues} className='ml-3 mr-2'>
+        <button onClick={formik.handleReset} className='ml-3 mr-2'>
           <TbRefresh />
         </button>
         <input

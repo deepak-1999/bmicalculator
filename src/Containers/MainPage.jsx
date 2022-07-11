@@ -30,8 +30,33 @@ const MainPage = () => {
           </button>
         </div>
         <hr className='bg-black/10 my-0.5'></hr>
-        <BMIinput pageNum={pageNum} setBmi = {setBmi} />
-        {bmi!==0 && <label>{bmi}</label>}
+        <BMIinput pageNum={pageNum} setBmi={setBmi} />
+        <hr className='bg-black/10 my-0.5 mt-2'></hr>
+        {bmi !== 0 && (
+          <div className='flex flex-col w-64'>
+            <span>Your BMI is {<span className='font-bold'> {bmi.toFixed(2)} </span>}</span>
+            <span>
+              You are{' '}
+              <span className='font-bold'>
+                {bmi < 18.5
+                  ? 'Underweight'
+                  : bmi < 24.9
+                  ? 'Healthy Weight'
+                  : bmi < 29.9
+                  ? 'Overweight'
+                  : 'Obese'}
+              </span>
+            </span>
+            <hr className='bg-black/10 my-0.5'></hr>
+            <h3 className='underline italic'>BMI weight ranges</h3>
+            <ul className='text-sm'>
+              <li>Less than 18.5 = Underweight</li>
+              <li>Between 18.5 - 24.9 = Healthy Weight</li>
+              <li>Between 25 - 29.9 = Overweight</li>
+              <li>Over 30 = Obese</li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )
