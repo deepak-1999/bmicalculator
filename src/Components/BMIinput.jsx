@@ -1,20 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { TbRefresh } from 'react-icons/tb'
-// import { useState } from 'react'
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
 
 const BMIinput = (props) => {
   const { pageNum, setBmi } = props
-  // const [heightFt, setHeightFt] = useState(0)
-  // const [heightIn, setHeightIn] = useState(0)
-  // const [weightSt, setWeightSt] = useState(0)
-  // const [weightLbs, setWeightLbs] = useState(0)
-  // const [isMeters, setIsMeters] = useState('m')
-  // const [heightMetric, setHeightMetric] = useState(0)
-  // const [weightMetric, setWeightMetric] = useState(0)
-
+  
   useEffect(() =>{
     formik.handleReset()
     setBmi(0)
@@ -45,29 +37,6 @@ const BMIinput = (props) => {
     },
     onReset: () => { setBmi(0) }
   })
-
-
-  // const resetValues = () => {
-  //   setHeightFt(0)
-  //   setHeightIn(0)
-  //   setWeightSt(0)
-  //   setWeightLbs(0)
-  //   setIsMeters('m')
-  //   setHeightMetric(0)
-  //   setWeightMetric(0)
-  //   setBmi(0)
-  // }
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault()
-  //   if(pageNum === 1){
-  //     console.log(event)
-  //     let heightSquared = heightMetric*heightMetric * (isMeters ? 1 : (0.01*0.01))
-  //     setBmi(weightMetric/heightSquared)
-  //   }
-
-  //   return false
-  // }
 
   return (
     <form onSubmit={formik.handleSubmit}>
