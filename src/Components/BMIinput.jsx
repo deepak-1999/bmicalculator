@@ -71,6 +71,7 @@ const BMIinput = (props) => {
           <div className='w-52'>
             <input
               value={formik.values.heightMetric}
+              min={formik.values.isMeters === 'cm' && 1}
               max={formik.values.isMeters === 'm' ? 3 : 300}
               type='number'
               id='heightMetric'
@@ -119,6 +120,7 @@ const BMIinput = (props) => {
         ) : (
           <div className='w-52'>
             <input
+              min={1}
               id='weightMetric'
               name='weightMetric'
               onChange={formik.handleChange}
